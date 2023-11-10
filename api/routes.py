@@ -1,11 +1,12 @@
 from http import HTTPStatus
 from flask import Blueprint, jsonify, request
 from flasgger import swag_from
-from sqlalchemy import select
+from sqlalchemy import select, delete
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm import Session
 
-from .models import Product
+from .models import Product, Cart, CartItem
+from .utils import get_promotion, get_subtotal
 from engine import base_engine as engine
 
 home_api = Blueprint('api', __name__)
@@ -60,7 +61,7 @@ def products():
             for product in session.scalars(query)
     ]
 
-    return jsonify(result), 200
+    return jsonify(result), HTTPStatus.OK.value
 
 
 @home_api.route('/products/<id>', methods=["GET"])
@@ -68,6 +69,9 @@ def products():
     'responses': {
         HTTPStatus.OK.value: {
             'description': 'product detail'
+        },
+        HTTPStatus.NOT_FOUND.value: {
+            'description': 'product not found'
         }
     }
 })
@@ -86,7 +90,7 @@ def product_detail(id):
     try:
         result =  session.scalars(query).one()
     except NoResultFound:
-        return 'product not found', 404
+        return 'product not found', HTTPStatus.NOT_FOUND.value
 
     return {
          'id': result.id,
@@ -96,7 +100,7 @@ def product_detail(id):
             'description': result.description, 
             'price': result.price,
             'non_discountable': result.non_discountable
-    }, 200
+    }, HTTPStatus.OK.value
 
 
 @home_api.route('/cart', methods=["GET", "POST"])
@@ -107,7 +111,7 @@ def product_detail(id):
         }
     }
 })
-def active_carts():
+def carts():
     """
         list of active cart
         ---
@@ -121,6 +125,8 @@ def active_carts():
                 properties:
                     coupon_code:
                         type: string
+                    shipping_fee:
+                        type: number
                     cart_items:
                         type: array
                         items:
@@ -134,7 +140,26 @@ def active_carts():
                                 qty: 
                                     type: integer
         """
-    return [], 200
+    
+    if request.method == 'POST':
+        req_data = request.get_json()
+
+        validated_data = get_subtotal(req_data)
+     
+        data = Cart(
+            coupon_code=validated_data.get('coupon_code'),
+            shipping_fee=validated_data.get('shipping_fee', 0),
+            subtotal=validated_data['subtotal'],
+            grand_total=validated_data['subtotal']+validated_data.get('shipping_fee', 0),
+            cart_items=[CartItem(product_id=item['product_id'], qty=item['qty'], item_price=item['item_price']) for item in validated_data.get('cart_items', [])]
+        )
+        session.add(data)
+        session.commit()
+        return 'data created', HTTPStatus.OK.value
+    else:
+        query = select(Cart)
+
+        return [{'cart_id': cart.id, 'grand_total': cart.grand_total} for cart in session.scalars(query)], HTTPStatus.OK.value
 
 
 @home_api.route('/cart/<id>', methods=["GET", "PUT", "DELETE"])
@@ -151,13 +176,22 @@ def cart(id):
         ---
         get:
             parameters:
-              - in: query
-                name: set_promo
-                type: string
-                required: false
-                default: 1
+              - in: path
+                name: id
+                type: integer
+                required: true
+        delete:
+            parameters:
+              - in: path
+                name: id
+                type: integer
+                required: true
         put:
             parameters:
+              - in: path
+                name: id
+                type: integer
+                required: true
               - in: body
                 name: cart
                 type: object
@@ -179,5 +213,51 @@ def cart(id):
                                 qty: 
                                     type: integer
         """
-    return {}, 200
+    if request.method == 'GET':
+        query = select(Cart).where(Cart.id == id)
+        try:
+            result =  session.scalars(query).one()
+        except NoResultFound:
+            return 'cart not found', HTTPStatus.NOT_FOUND.value
+        
+        coupon_code = result.coupon_code
 
+        promotion = get_promotion(coupon_code)
+
+        eligible_promo = {'message': 'no eligible promo'}
+        subtotal = result.subtotal
+        shipping_fee = result.shipping_fee
+        if promotion:
+            eligible_promo = {
+                'coupon_code': promotion['coupon_code'],
+                'subtotal_discount': min(subtotal * promotion['subtotal_discount']/100, promotion['max_subtotal_discount']) 
+                    if promotion['max_subtotal_discount'] != None else subtotal * promotion['subtotal_discount']/100,
+                'shipping_discount': min(shipping_fee * promotion['shipping_discount']/100, promotion['max_shipping_discount']) 
+                    if promotion['max_shipping_discount'] != None else shipping_fee * promotion['shipping_discount']/100,
+                'cashback': min(subtotal * promotion['cashback']/100, promotion['max_cashback']) 
+                    if promotion['max_cashback'] != None else subtotal * promotion['cashback']/100
+            }
+
+
+        return {
+            'id': result.id,
+            'coupon_code': coupon_code,
+            'shipping_fee': shipping_fee,
+            'cart_items': [{'product_id': item.product_id, 'qty': item.qty}for item in result.cart_items],
+            'subtotal': subtotal,
+            'grandtotal': result.grand_total,
+            'eligible_promo': eligible_promo
+            
+        }, HTTPStatus.OK.value
+
+    if request.method == 'PUT':
+        'update cart data'
+        return {}, HTTPStatus.OK.value
+    
+    cart_query = delete(Cart).where(Cart.id == id)
+    cart_item_query = delete(CartItem).where(CartItem.cart_id == id)
+    
+    session.execute(cart_item_query)
+    session.execute(cart_query)
+    session.commit()
+    return f'cart-{id} deleted', HTTPStatus.OK.value

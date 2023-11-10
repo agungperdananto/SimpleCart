@@ -34,6 +34,7 @@ class Cart(Base):
     subtotal: Mapped[float] = mapped_column()
     shipping_fee: Mapped[float] = mapped_column()
     grand_total: Mapped[float] = mapped_column()
+    coupon_code: Mapped[str] = mapped_column(String(30), nullable=True)
 
     cart_items: Mapped[List["CartItem"]] = relationship(
         back_populates="cart", cascade="all, delete-orphan"
@@ -54,3 +55,14 @@ class CartItem(Base):
 
     qty: Mapped[int] = mapped_column()
     item_price: Mapped[float] = mapped_column()
+
+class Promotion(Base):
+    __tablename__ = "promotion"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    coupon_code: Mapped[str] = mapped_column(String(30), unique=True)
+    subtotal_discount: Mapped[float] = mapped_column(default=0)
+    max_subtotal_discount: Mapped[float] = mapped_column(nullable=True)
+    shipping_discount: Mapped[float] = mapped_column(default=0)
+    max_shipping_discount: Mapped[float] = mapped_column(nullable=True)
+    cashback: Mapped[float] = mapped_column(default=0)
+    max_cashback: Mapped[float] = mapped_column(nullable=True)
