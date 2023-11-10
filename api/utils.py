@@ -36,7 +36,7 @@ def get_subtotal(cart):
     for item in cart_items:
         product_id = item['product_id']
         price = price_map.get(product_id)
-        if price == None:
+        if price is None:
             continue
         item_subtotal = price * item['qty']
         cart_item = {

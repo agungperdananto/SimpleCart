@@ -231,11 +231,11 @@ def cart(id):
             eligible_promo = {
                 'coupon_code': promotion['coupon_code'],
                 'subtotal_discount': min(subtotal * promotion['subtotal_discount']/100, promotion['max_subtotal_discount']) 
-                    if promotion['max_subtotal_discount'] != None else subtotal * promotion['subtotal_discount']/100,
+                    if promotion['max_subtotal_discount'] is not None else subtotal * promotion['subtotal_discount']/100,
                 'shipping_discount': min(shipping_fee * promotion['shipping_discount']/100, promotion['max_shipping_discount']) 
-                    if promotion['max_shipping_discount'] != None else shipping_fee * promotion['shipping_discount']/100,
+                    if promotion['max_shipping_discount'] is not None else shipping_fee * promotion['shipping_discount']/100,
                 'cashback': min(subtotal * promotion['cashback']/100, promotion['max_cashback']) 
-                    if promotion['max_cashback'] != None else subtotal * promotion['cashback']/100
+                    if promotion['max_cashback'] is not None else subtotal * promotion['cashback']/100
             }
 
 
