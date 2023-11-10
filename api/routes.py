@@ -1,8 +1,16 @@
 from http import HTTPStatus
-from flask import Blueprint, request
+from flask import Blueprint, jsonify, request
 from flasgger import swag_from
+from sqlalchemy import select
+from sqlalchemy.exc import NoResultFound
+from sqlalchemy.orm import Session
+
+from .models import Product
+from engine import base_engine as engine
 
 home_api = Blueprint('api', __name__)
+
+session = Session(engine)
 
 
 @home_api.route('/products', methods=["GET"])
@@ -26,26 +34,33 @@ def products():
             name: sku
             type: string
             required: false
-        responses:
-          200:
-            description: list of products
         """
     keyword = request.args.get('q')
     sku = request.args.get('sku')
 
-    print(f'keyword: {keyword}')
-    print(f'sku: {sku}')
+    query = select(Product)
+
+    if keyword:
+       query = query.where(Product.name.ilike(f'%{keyword}%'))
+    
+    if sku:
+        sku_list = sku.split(',')
+        query = query.where(Product.sku.in_(sku_list))
 
     result = [
-        {'id': 1, 
-         'name': 'product 1'
-         },
-        {'id': 2, 
-         'name': 'product 2'
-         }
+        {   
+            'id': product.id,
+            'sku': product.sku,
+            'brand': product.brand, 
+            'name': product.name,
+            'description': product.description, 
+            'price': product.price,
+            'non_discountable': product.non_discountable
+            } 
+            for product in session.scalars(query)
     ]
 
-    return result, 200
+    return jsonify(result), 200
 
 
 @home_api.route('/products/<id>', methods=["GET"])
@@ -65,17 +80,23 @@ def product_detail(id):
             name: id
             type: string
             required: true
-        responses:
-          200:
-            description: product detail
         """
-    print('ID', id)
 
-    result =  {'id': 1,
-         'name': 'product 1'
-         }
+    query = select(Product).where(Product.id == id)
+    try:
+        result =  session.scalars(query).one()
+    except NoResultFound:
+        return 'product not found', 404
 
-    return result, 200
+    return {
+         'id': result.id,
+            'sku': result.sku,
+            'brand': result.brand, 
+            'name': result.name,
+            'description': result.description, 
+            'price': result.price,
+            'non_discountable': result.non_discountable
+    }, 200
 
 
 @home_api.route('/cart', methods=["GET", "POST"])
@@ -112,9 +133,6 @@ def active_carts():
                                     type: integer
                                 qty: 
                                     type: integer
-        responses:
-          200:
-            description: cart detail
         """
     return [], 200
 
@@ -160,10 +178,6 @@ def cart(id):
                                     type: integer
                                 qty: 
                                     type: integer
-        
-        responses:
-          200:
-            description: cart detail
         """
     return {}, 200
 

@@ -16,7 +16,7 @@ class Product(Base):
     sku: Mapped[str] = mapped_column(String(30))
     brand: Mapped[str] = mapped_column(String(30))
     name: Mapped[str] = mapped_column(String(30))
-    decription: Mapped[str] = mapped_column(String(30))
+    description: Mapped[str] = mapped_column(String(30))
     price: Mapped[float] = mapped_column()
     non_discountable: Mapped[bool] = mapped_column(default=False)
 

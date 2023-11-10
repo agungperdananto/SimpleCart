@@ -24,6 +24,7 @@ def create_app():
 
      ## Initialize Config
     app.config.from_pyfile('config.py')
+    app.json.sort_keys = False
     app.register_blueprint(home_api, url_prefix='/api')
     app.cli.add_command(create)
 
