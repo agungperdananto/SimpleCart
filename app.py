@@ -18,7 +18,7 @@ def create_app():
     app = Flask(__name__)
 
     app.config['SWAGGER'] = {
-        'title': 'Flask API Starter Kit',
+        'title': 'Simple Cart API',
     }
     swagger = Swagger(app) # noqa: F841
 
