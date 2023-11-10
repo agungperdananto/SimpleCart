@@ -2,18 +2,14 @@ from http import HTTPStatus
 from flask import Blueprint
 from flasgger import swag_from
 
-from .models import WelcomeModel
-from .schemas import WelcomeSchema
-
-
 home_api = Blueprint('api', __name__)
 
-home_api.route('/')
+
+@home_api.route('/')
 @swag_from({
     'responses': {
         HTTPStatus.OK.value: {
-            'description': 'Welcome to the Flask Starter Kit',
-            'schema': WelcomeSchema
+            'description': 'Welcome to the Flask Starter Kit'
         }
     }
 })
@@ -23,5 +19,7 @@ def welcome():
     A more detailed description of the endpoint
     ---
     """
-    result = WelcomeModel()
-    return WelcomeSchema().dump(result), 200
+    result = {
+        "messages": "hello world"
+    }
+    return result, 200

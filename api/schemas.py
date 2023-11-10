@@ -1,10 +1,18 @@
 from flask_marshmallow import Schema
-from marshmallow.fields import Str
+from flasgger import fields
 
+
+# class WelcomeSchema(Schema):
+#     class Meta:
+#         # Fields to expose
+#         fields = ["message", "id"]
+
+#     message = fields.Str()
+#     id = fields.Int()
 
 class WelcomeSchema(Schema):
-    class Meta:
-        # Fields to expose
-        fields = ["message"]
+    messages = fields.Str()
+# welcome_schema = {
 
-    message = Str()
+#     "messages": "example messages"
+# }

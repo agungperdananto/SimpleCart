@@ -1,7 +1,18 @@
-
-from flasgger import Swagger
+import click
 from flask import Flask
+from flask.cli import with_appcontext
+from flasgger import Swagger
+
 from api.routes import home_api
+from api.utils import create_table
+
+
+@click.command(name='create')
+@with_appcontext
+def create():
+    create_table()
+    print('tables is created!')
+
 
 def create_app():
     app = Flask(__name__)
@@ -9,13 +20,14 @@ def create_app():
     app.config['SWAGGER'] = {
         'title': 'Flask API Starter Kit',
     }
-    swagger = Swagger(app)
+    swagger = Swagger(app) # noqa: F841
+
      ## Initialize Config
     app.config.from_pyfile('config.py')
     app.register_blueprint(home_api, url_prefix='/api')
+    app.cli.add_command(create)
 
     return app
-
 
 if __name__ == '__main__':
     from argparse import ArgumentParser
@@ -28,13 +40,3 @@ if __name__ == '__main__':
     app = create_app()
 
     app.run(host='0.0.0.0', port=port)
-
-
-# if len(sys.argv)>1:
-#     command = sys.argv[1]
-
-#     if command == 'create_table':
-#         create_table()
-#         print('tables created successfully!')
-#     else:
-#         print('command not found!')

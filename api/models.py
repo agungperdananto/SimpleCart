@@ -46,12 +46,11 @@ class Cart(Base):
 class CartItem(Base):
     __tablename__ = "cart_item"
     id: Mapped[int] = mapped_column(primary_key=True)
-    cart_id: Mapped[int] = mapped_column(ForeignKey("Cart.id"))
+    cart_id: Mapped[int] = mapped_column(ForeignKey("cart.id"))
     cart: Mapped["Cart"] = relationship(back_populates="cart_items")
 
-    product_id: Mapped[int] = mapped_column(ForeignKey("Product.id"))
+    product_id: Mapped[int] = mapped_column(ForeignKey("product.id"))
     product: Mapped["Product"] = relationship(back_populates="cart_items")
 
-    product_id: Mapped[int] = mapped_column(ForeignKey("product.id"))
     qty: Mapped[int] = mapped_column()
     item_price: Mapped[float] = mapped_column()
