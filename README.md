@@ -9,7 +9,7 @@ implement simple cart and promotion
 ## Install requirements
 
     pip install -r requirements.txt
-## set env variable
+## create database
 create new database, in this case we're using postgresql
 
 ## set env variable
