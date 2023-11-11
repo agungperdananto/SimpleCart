@@ -30,7 +30,7 @@ run `flask create`to create tables from models.
 
 ## Insert data product
 
-run 
+run this query from your db client
 ```
 INSERT INTO public.product (sku,brand,"name",description,price,non_discountable) VALUES
 	 ('ABCKM5','ABC','kecap manis ABC 500ml','kecap manis abc 500ml',25000.0,false),
