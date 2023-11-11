@@ -13,7 +13,7 @@ class Base(DeclarativeBase):
 class Product(Base):
     __tablename__ = "product"
     id: Mapped[int] = mapped_column(primary_key=True)
-    sku: Mapped[str] = mapped_column(String(30))
+    sku: Mapped[str] = mapped_column(String(30), unique=True)
     brand: Mapped[str] = mapped_column(String(30))
     name: Mapped[str] = mapped_column(String(30))
     description: Mapped[str] = mapped_column(String(30))
