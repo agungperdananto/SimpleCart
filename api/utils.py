@@ -9,8 +9,6 @@ from engine import base_engine as engine
 def create_table():
     Base.metadata.create_all(engine)
 
-def get_promo():
-    pass
 
 def get_price(product_ids):
     session = Session(engine)
@@ -49,6 +47,7 @@ def get_subtotal(cart):
     cart['cart_items'] = items_with_price
     cart['subtotal'] = subtotal
     return cart
+
 
 def get_promotion(coupon_code):
     session = Session(engine)
