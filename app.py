@@ -7,6 +7,9 @@ from api.routes import home_api
 from api.utils import create_table
 
 
+session = Session(engine)
+
+
 @click.command(name='create')
 @with_appcontext
 def create():
