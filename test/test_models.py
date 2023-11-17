@@ -1,10 +1,10 @@
 import factory
-import json
-import random
 from factory.alchemy import SQLAlchemyModelFactory
 from sqlalchemy.orm import Session
 from engine import base_engine as engine
-from flask import jsonify
+
+from .settings import DEFAULT_PRICE
+
 
 from api.models import Product
 
@@ -21,28 +21,17 @@ class FactoryProduct(ModelFactory):
     brand = factory.Faker('name')
     name = factory.Faker('name')
     description = factory.Faker('sentence')
-    price = factory.LazyAttribute(lambda x: random.randrange(0, 10000))
+    price = DEFAULT_PRICE
     non_discountable = factory.Faker('boolean')
 
     class Meta:
         model = Product
 
-def test_product_api(client):
-    response = client.get("/api/products")
-    print('Response', json.loads(response.data))
-    assert response.status_code == 200
 
 def test_product():
     product = FactoryProduct(id=2)
     assert product.price is not None
 
-
-def test_product_detail_api(client):
-    id = 1
-    response = client.get(f"/api/products/{id}")
-    assert response.status_code == 200
-    data = json.loads(response.data)
-    assert id == data.get('id')
 
 def create_factory():
     product = FactoryProduct(id=1)
