@@ -1,11 +1,19 @@
-from factory.alchemy import SQLAlchemyModelFactory
-from sqlalchemy.orm import Session
+import pytest
+
+from app import create_app
+from .test_models import create_factory
 
 
-class ModelFactory(SQLAlchemyModelFactory):
-    class Meta:
-        abstract = True
-        sqlalchemy_session = Session()
+@pytest.fixture
+def app(mocker):
+    mocker.patch("flask_sqlalchemy.SQLAlchemy.init_app", return_value=True)
+    mocker.patch("flask_sqlalchemy.SQLAlchemy.create_all", return_value=True)
+    mocker.patch("api.routes.products", return_value=[])
+    mocker.patch("api.routes.product_detail", return_value={"id": 1})
+
+    create_factory()
+    app = create_app()
+    return app
 
 
 # import pytest

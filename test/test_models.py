@@ -1,8 +1,20 @@
 import factory
+import json
 import random
-from .conftest import ModelFactory
+from factory.alchemy import SQLAlchemyModelFactory
+from sqlalchemy.orm import Session
+from engine import base_engine as engine
+from flask import jsonify
 
 from api.models import Product
+
+session = Session(engine)
+
+class ModelFactory(SQLAlchemyModelFactory):
+    class Meta:
+        abstract = True
+        sqlalchemy_session = Session()
+
 
 class FactoryProduct(ModelFactory):
     sku = factory.Faker('text')
@@ -15,11 +27,34 @@ class FactoryProduct(ModelFactory):
     class Meta:
         model = Product
 
+def test_product_api(client):
+    response = client.get("/api/products")
+    print('Response', json.loads(response.data))
+    assert response.status_code == 200
 
 def test_product():
     product = FactoryProduct(id=2)
     assert product.price is not None
 
+
+def test_product_detail_api(client):
+    id = 1
+    response = client.get(f"/api/products/{id}")
+    assert response.status_code == 200
+    data = json.loads(response.data)
+    assert id == data.get('id')
+
+def create_factory():
+    product = FactoryProduct(id=1)
+    data = Product(
+        sku = product.sku,
+        brand = product.brand,
+        name = product.name,
+        description = product.description,
+        price = product.price,
+        non_discountable = product.non_discountable)
+    session.add(data)
+    session.commit()
 
 # from api.models import Product, Cart
 
