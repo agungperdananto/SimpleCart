@@ -64,5 +64,16 @@ def get_promotion(coupon_code):
         'max_shipping_discount': result.max_shipping_discount,
         'cashback': result.cashback,
         'max_cashback': result.max_cashback
-
     }
+
+
+def apply_promo(subtotal, shipping_fee, promotion):
+    return {
+                'coupon_code': promotion['coupon_code'],
+                'subtotal_discount': min(subtotal * promotion['subtotal_discount']/100, promotion['max_subtotal_discount']) 
+                    if promotion['max_subtotal_discount'] is not None else subtotal * promotion['subtotal_discount']/100,
+                'shipping_discount': min(shipping_fee * promotion['shipping_discount']/100, promotion['max_shipping_discount']) 
+                    if promotion['max_shipping_discount'] is not None else shipping_fee * promotion['shipping_discount']/100,
+                'cashback': min(subtotal * promotion['cashback']/100, promotion['max_cashback']) 
+                    if promotion['max_cashback'] is not None else subtotal * promotion['cashback']/100
+            }

@@ -6,7 +6,7 @@ from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm import Session
 
 from .models import Product, Cart, CartItem
-from .utils import get_promotion, get_subtotal
+from .utils import apply_promo, get_promotion, get_subtotal
 from engine import base_engine as engine
 
 home_api = Blueprint('api', __name__)
@@ -226,16 +226,7 @@ def cart(id):
         subtotal = result.subtotal
         shipping_fee = result.shipping_fee
         if promotion:
-            eligible_promo = {
-                'coupon_code': promotion['coupon_code'],
-                'subtotal_discount': min(subtotal * promotion['subtotal_discount']/100, promotion['max_subtotal_discount']) 
-                    if promotion['max_subtotal_discount'] is not None else subtotal * promotion['subtotal_discount']/100,
-                'shipping_discount': min(shipping_fee * promotion['shipping_discount']/100, promotion['max_shipping_discount']) 
-                    if promotion['max_shipping_discount'] is not None else shipping_fee * promotion['shipping_discount']/100,
-                'cashback': min(subtotal * promotion['cashback']/100, promotion['max_cashback']) 
-                    if promotion['max_cashback'] is not None else subtotal * promotion['cashback']/100
-            }
-
+            eligible_promo = apply_promo(subtotal, shipping_fee, promotion)
 
         return {
             'id': result.id,
