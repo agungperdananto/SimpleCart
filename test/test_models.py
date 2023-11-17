@@ -34,15 +34,17 @@ def test_product():
 
 
 def create_factory():
-    product = FactoryProduct(id=1)
-    data = Product(
-        sku = product.sku,
-        brand = product.brand,
-        name = product.name,
-        description = product.description,
-        price = product.price,
-        non_discountable = product.non_discountable)
-    session.add(data)
+    for idx in range(5):
+        id = idx + 1
+        product = FactoryProduct(id=id)
+        data = Product(
+            sku = product.sku,
+            brand = product.brand,
+            name = product.name,
+            description = product.description,
+            price = product.price * id,
+            non_discountable = product.non_discountable)
+        session.add(data)
     session.commit()
 
 # from api.models import Product, Cart
