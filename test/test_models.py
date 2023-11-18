@@ -17,11 +17,11 @@ class ModelFactory(SQLAlchemyModelFactory):
 
 
 class FactoryProduct(ModelFactory):
-    sku = factory.Faker('text')
+    sku = factory.sequence(lambda x: f'ABC{x+1}' )
     brand = factory.Faker('name')
     name = factory.Faker('name')
     description = factory.Faker('sentence')
-    price = DEFAULT_PRICE
+    price = factory.sequence(lambda x: (x + 1) * DEFAULT_PRICE )
     non_discountable = factory.Faker('boolean')
 
     class Meta:
@@ -42,7 +42,7 @@ def create_factory():
             brand = product.brand,
             name = product.name,
             description = product.description,
-            price = product.price * id,
+            price = product.price,
             non_discountable = product.non_discountable)
         session.add(data)
     session.commit()
