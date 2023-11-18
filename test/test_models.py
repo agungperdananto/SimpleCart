@@ -46,16 +46,3 @@ def create_factory():
             non_discountable = product.non_discountable)
         session.add(data)
     session.commit()
-
-# from api.models import Product, Cart
-
-# from factory.alchemy import SQLAlchemyModelFactory
-# from unittest.mock import MagicMock, patch
-
-# def test_product(mocked_session):
-#     product = mocked_session.query(Product).filter_by(id=1).first()
-#     assert product.brand == "Indofood"
-
-# def test_cart(mocked_session):
-#     cart = mocked_session.query(Cart).filter_by(id=1).first()
-#     assert cart.grand_total == (cart.shipping_fee + cart.subtotal)

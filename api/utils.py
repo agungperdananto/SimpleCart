@@ -18,7 +18,6 @@ def get_price(product_ids):
         product.id: product.price
         for product in session.scalars(query)
     }
-    print('PRices', prices)
     return {
         product_id: prices.get(product_id)
         for product_id in product_ids
