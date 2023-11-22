@@ -66,7 +66,7 @@ def get_promotion(coupon_code):
     }
 
 
-def apply_promo(subtotal, shipping_fee, promotion):
+def apply_promo(subtotal: float, shipping_fee: float, promotion: dict):
     return {
                 'coupon_code': promotion['coupon_code'],
                 'subtotal_discount': min(subtotal * promotion['subtotal_discount']/100, promotion['max_subtotal_discount']) 
