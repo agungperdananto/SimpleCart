@@ -1,4 +1,9 @@
-from api.utils import get_price, get_subtotal, apply_promo
+from api.utils import (
+    get_price,
+    get_subtotal,
+    apply_promo
+)
+
 from api.models import Product
 
 from .settings import DEFAULT_PRICE
