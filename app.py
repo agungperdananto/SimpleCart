@@ -2,6 +2,7 @@ import click
 from flask import Flask
 from flask.cli import with_appcontext
 from flasgger import Swagger
+import pytest
 
 from api.routes import home_api
 from api.utils import create_table
@@ -29,6 +30,7 @@ def create_app():
     app.cli.add_command(create)
 
     return app
+
 
 if __name__ == '__main__':
     from argparse import ArgumentParser

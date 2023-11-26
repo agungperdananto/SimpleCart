@@ -5,14 +5,14 @@ from sqlalchemy.exc import NoResultFound
 from .models import Base, Product, Promotion
 from engine import base_engine as engine
 
+session = Session(engine)
+
 
 def create_table():
     Base.metadata.create_all(engine)
 
 
 def get_price(product_ids):
-    session = Session(engine)
-
     query = select(Product).where(Product.id.in_(product_ids))
     prices = {
         product.id: product.price
@@ -50,7 +50,6 @@ def get_subtotal(cart):
 
 
 def get_promotion(coupon_code):
-    session = Session(engine)
     query = select(Promotion).where(Promotion.coupon_code == coupon_code)
     try:
         result =  session.scalars(query).one()
@@ -67,7 +66,7 @@ def get_promotion(coupon_code):
     }
 
 
-def apply_promo(subtotal, shipping_fee, promotion):
+def apply_promo(subtotal: float, shipping_fee: float, promotion: dict):
     return {
                 'coupon_code': promotion['coupon_code'],
                 'subtotal_discount': min(subtotal * promotion['subtotal_discount']/100, promotion['max_subtotal_discount']) 
