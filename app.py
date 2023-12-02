@@ -2,7 +2,6 @@ import click
 from flask import Flask
 from flask.cli import with_appcontext
 from flasgger import Swagger
-import pytest
 
 from api.routes import home_api
 from api.utils import create_table
