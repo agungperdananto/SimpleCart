@@ -15,3 +15,8 @@ def test_product_api(client):
     response = client.get("/api/products")
     assert response.status_code == 200
 
+
+def test_get_cart(client):
+    # route 'api/cart/<id>'
+    assert True
+

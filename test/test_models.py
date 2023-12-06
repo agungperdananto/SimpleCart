@@ -34,6 +34,7 @@ def test_product():
 
 
 def create_factory():
+    # create data product 
     for idx in range(5):
         id = idx + 1
         product = FactoryProduct(id=id)
@@ -46,3 +47,6 @@ def create_factory():
             non_discountable = product.non_discountable)
         session.add(data)
     session.commit()
+
+    # create data cart id
+    # create data cart

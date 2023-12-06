@@ -48,15 +48,17 @@ def test_apply_promo():
         'max_cashback': 50000
     }
 
-    subtotal_discount = 13500
-    shipping_discount = 15000
-    cashback = 10000
+    # expected result
+    expected_subtotal = 13500
+    expected_shipping = 15000
+    expected_cashback = 10000
 
-    applied_promo = apply_promo(subtotal, shipping_fee, promotion)
+    # actual result
+    actual_result = apply_promo(subtotal, shipping_fee, promotion)
 
     # subtotal discount
-    assert subtotal_discount == applied_promo['subtotal_discount']
+    assert expected_subtotal == actual_result['subtotal_discount']
     # shipping fee
-    assert shipping_discount == applied_promo['shipping_discount']
+    assert expected_shipping == actual_result['shipping_discount']
     # cashback
-    assert cashback == applied_promo['cashback']
+    assert expected_cashback == actual_result['cashback']
