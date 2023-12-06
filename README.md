@@ -58,7 +58,7 @@ run test
 
 check test coverage
 
-    pytest --cov=myproj tests/
+    pytest --cov=api test/
 
 
 ## Debt
