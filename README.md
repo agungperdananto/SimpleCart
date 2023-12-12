@@ -68,7 +68,3 @@ lengkapi function test berikut untuk meng-cover get cart api
 https://github.com/agungperdananto/SimpleCart/blob/b458c1ce92e5bf8cceb07787086f03774f0c190b/test/test_routes.py#L19C6-L21
 
 
-
-sebelumnya jangan lupa untuk menambahkan create factory untuk model cart
-
-https://github.com/agungperdananto/SimpleCart/blob/b458c1ce92e5bf8cceb07787086f03774f0c190b/test/test_models.py#L36-L52
