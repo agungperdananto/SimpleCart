@@ -61,10 +61,7 @@ check test coverage
     pytest --cov=api test/
 
 
-## Debt
+Tugas UAS 
 
- - Cart Update
- - Same product validation on cart
- - Unit test
- - Unit test coverage
- - CI setup 
+lengkapi function test berikut untuk meng-cover get cart api
+
