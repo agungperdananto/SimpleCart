@@ -22,7 +22,7 @@ class FactoryProduct(ModelFactory):
     name = factory.Faker('name')
     description = factory.Faker('sentence')
     price = factory.sequence(lambda x: (x + 1) * DEFAULT_PRICE )
-    non_discountable = factory.Faker('boolean')
+    non_discountable = factory.sequence(lambda x: x%2==0 )
 
     class Meta:
         model = Product
