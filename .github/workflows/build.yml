@@ -25,4 +25,4 @@ jobs:
         run: ruff .
       - name: Run tests with coverage
       run: |
-        pytest --cov=tugas_uas tests/
+        pytest --cov=tugas_uass tests/
