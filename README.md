@@ -1,23 +1,25 @@
 # SimpleCart
+
 implement simple cart and promotion
 
 # Setup Guide
 
-
 ## Install, create and activate virtualenv
+
 https://medium.com/analytics-vidhya/virtual-environment-6ad5d9b6af59
 
 ## Install requirements
 
     pip install -r requirements.txt
+
 ## create database
+
 create new database, in this case we're using postgresql
 
 ## set env variable
 
 create file .env in the root of the folder, and fill with you credential of your database
 
-      
     DB_USER = ""
     DB_PASSWORD = ""
     DB_HOST = ""
@@ -32,6 +34,7 @@ run `flask create`to create tables from models.
 ## Insert data product
 
 run this query from your db client
+
 ```
 INSERT INTO public.product (sku,brand,"name",description,price,non_discountable) VALUES
 	 ('ABCKM5','ABC','kecap manis ABC 500ml','kecap manis abc 500ml',25000.0,false),
@@ -44,30 +47,31 @@ INSERT INTO public.product (sku,brand,"name",description,price,non_discountable)
 ```
 
 ## Run the app
-to run the web app simply  use
+
+to run the web app simply use
 
     flask run
 
 to access swagger use url `localhost:5000/apidocs`
 
-
 ## Run test
+
 run test
 
     pytest
 
 check test coverage
 
-    pytest --cov=myproj tests/
-
+    pytest --cov=myproj test/
 
 ### Tugas uas 2
+
 Lihat https://github.com/agungperdananto/SimpleCart/pulls
 untuk contoh check yang gagal dan berhasil.
 
 CI di sini belum menghandle pytest dan pytest-cov
 
-tugasnya adalah edit `.github/workflows/build.yml` di branch `dev-test`  supaya CI dapat menghandle pytest dan pytest cov 
+tugasnya adalah edit `.github/workflows/build.yml` di branch `dev-test` supaya CI dapat menghandle pytest dan pytest cov
 https://github.com/agungperdananto/SimpleCart/blob/dev-test/.github/workflows/build.yml
 
 lalu buat contoh pull request untuk test yang gagal dan berhasil.
