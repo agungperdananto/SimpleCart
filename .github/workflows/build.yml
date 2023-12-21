@@ -5,7 +5,7 @@ on:
       - dev-test
   push:
     branches:
-      - dev-test
+      - master
 jobs:
   pr-only:
     if: github.event_name == 'pull_request'
