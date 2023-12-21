@@ -23,3 +23,6 @@ jobs:
         run: pip install -r requirements.txt
       - name: Run ruff
         run: ruff .
+      - name: Run tests with coverage
+      run: |
+        pytest --cov=tugas_uas tests/
