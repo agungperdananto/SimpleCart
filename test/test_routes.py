@@ -30,4 +30,4 @@ def test_post_cart(client):
     response = client.post("/api/cart", json=cart_data)
     
     # Check that the response status code is 200 (OK)
-    assert response.status_code !=200
+    assert response.status_code ==200
