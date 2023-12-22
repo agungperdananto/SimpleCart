@@ -60,3 +60,4 @@ def test_apply_promo():
     assert shipping_discount == applied_promo['shipping_discount']
     # cashback
     assert cashback == applied_promo['cashback']
+
