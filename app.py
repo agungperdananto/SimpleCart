@@ -2,18 +2,16 @@ import click
 from flask import Flask
 from flask.cli import with_appcontext
 from flasgger import Swagger
-import pytest
+
 
 from api.routes import home_api
 from api.utils import create_table
-
 
 @click.command(name='create')
 @with_appcontext
 def create():
     create_table()
-    print('tables is created!')
-
+    print('Tables is created!')
 
 def create_app():
     app = Flask(__name__)
@@ -21,16 +19,15 @@ def create_app():
     app.config['SWAGGER'] = {
         'title': 'Simple Cart API',
     }
-    swagger = Swagger(app) # noqa: F841
+    swagger = Swagger(app)  # noqa: F841
 
-     ## Initialize Config
+    # Initialize Config
     app.config.from_pyfile('config.py')
-    app.json.sort_keys = False
+    app.json_sort_keys = False  # fix typo: app.json.sort_keys -> app.json_sort_keys
     app.register_blueprint(home_api, url_prefix='/api')
     app.cli.add_command(create)
 
     return app
-
 
 if __name__ == '__main__':
     from argparse import ArgumentParser
