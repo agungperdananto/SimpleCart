@@ -14,7 +14,7 @@ NAME = os.getenv("DB_NAME")
 
 try:
     base_engine = create_engine(f'postgresql+psycopg2://{USER}:{PASSWORD}@{HOST}:{PORT}/{NAME}')
-except Exception as e:
+except Exception:
     base_engine = create_engine("sqlite://", echo=True)
     Base.metadata.drop_all(base_engine)
     Base.metadata.create_all(base_engine)
