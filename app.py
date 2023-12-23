@@ -2,7 +2,7 @@ import click
 from flask import Flask
 from flask.cli import with_appcontext
 from flasgger import Swagger
-import pytest
+
 
 from api.routes import home_api
 from api.utils import create_table
@@ -25,7 +25,7 @@ def create_app():
 
      ## Initialize Config
     app.config.from_pyfile('config.py')
-    app.json.sort_keys = False
+    app.json_sort_keys = False  # fix typo: app.json.sort_keys -> app.json_sort_keys
     app.register_blueprint(home_api, url_prefix='/api')
     app.cli.add_command(create)
 
