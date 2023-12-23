@@ -22,4 +22,6 @@ jobs:
       - name: Install requirements
         run: pip install -r requirements.txt
       - name: Run ruff
-        run: ruff .
+         run: ruff .
+      - name: Test with pytest and pytest-cov omitting the test files
+        run: pytest --cov=. --cov-config=.covconfig
