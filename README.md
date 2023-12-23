@@ -51,6 +51,16 @@ to run the web app simply  use
 to access swagger use url `localhost:5000/apidocs`
 
 
+## Run test
+run test
+
+    pytest
+
+check test coverage
+
+    pytest --cov=myproj tests/
+
+
 ## Debt
 
  - Cart Update
